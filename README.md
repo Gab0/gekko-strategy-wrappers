@@ -1,6 +1,14 @@
-This is a template for gekko trading bot strategies that runs strategies inside them, so you can add mechanisms (stoploss, volume threshold to try trades, run multiple strats, etc..) to existing strategies.
+To facilitate the composition of strategies that are based on strats glued together.
+Or to add a simple conditional to existing strat that is reusable to any other (i.e only buys when volume is above threshold);
 
-Some examples are added.
+Examples added, and community examples are welcome;
 
-ps: There is a problem with the mechanism. If you run nullTest.js with some strategy, and the strategy itself alone, you'll notice a slight divergence between backtesting results. So consider this highly WIP.
+###Setup
+
+Move `strategyWrapperRules` to gekko strategy folder.
+
+###Usage
+
+Check the examples.
+
 

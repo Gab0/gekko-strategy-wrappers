@@ -5,14 +5,16 @@
 
 var _ = require('lodash');
 var log = require('../core/log.js');
+var Wrapper = require('strategyWrapperRules');
 
-var method = {};
+// strategy first declared as Wrapper object!
+var method = Wrapper;
 method.init = function() {
 
     this.age = 0;
 
     this.currentTrend;
-    this.requiredHistory = 20;
+    this.requiredHistory = -1;
 
 
     var STRATEGY = "RSI_BULL_BEAR";
@@ -43,7 +45,8 @@ return JSON.parse(JSON.stringify(candle));
 
 method.check = function(candle) {
 
-    this.STRATEGY.tick(candle);
+    // childCheck required for each wrapper check;
+    this.childCheck();
 
     this.lastVolumes.push(candle.volume);
 
@@ -51,48 +54,13 @@ method.check = function(candle) {
         this.lastVolumes.shift();
 
     // now our strategy logic of selecting the consultant RBB;
-    if (this.STRATEGY.lastAdvice)
-    {
-        var medianVolumes = this.lastVolumes.reduce(function(a,b){return a+b;},0);
-        if (candle.volume > medianVolumes)
-            this.advice(this.STRATEGY.lastAdvice.recommendation);
 
-    }
+    var medianVolumes = this.lastVolumes.reduce(function(a,b){return a+b;},0);
+    if (candle.volume > medianVolumes)
+        this.listenAdvice(this.STRATEGY);
 
-
-
-    this.STRATEGY.lastAdvice = false;
 
 	// and thats it;
-}
-
-// BELOW METHODS ARE INNER WORKINGS AND NOT INTERESTING FOR A STRATEGY DESIGNER;
-method.createChild = function(stratname, settings) {
-    //  REPRODUCE STEPS ON gekko/plugins/tradingAdvisor.js
-
-    var Consultant = require('../plugins/tradingAdvisor/baseTradingMethod');
-
-    var stratMethod = require('./'+stratname+'.js');
-
-    _.each(stratMethod, function(fn, name) {
-        Consultant.prototype[name] = fn;
-    });
-
-    Consultant.prototype.collectAdvice = function(advice)
-    {
-        this.lastAdvice = advice;
-
-    }
-    var Strategy = new Consultant(settings);
-
-    Strategy.on('advice', Strategy.collectAdvice );
-
-    return Strategy;
-}
-
-method.collectAdvice = function(advice)
-{
-    this.advices.push(advice);
 }
 
 module.exports = method;

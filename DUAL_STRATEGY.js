@@ -5,17 +5,16 @@
 
 var _ = require('lodash');
 var log = require('../core/log.js');
+var Wrapper = require('./strategyWrapperRules');
 
-// all used child strategies are "required"
-var RBB = require('./RSI_BULL_BEAR.js')
 
-var method = {};
+var method = Wrapper;
 method.init = function() {
 
     this.age = 0;
 
     this.currentTrend;
-    this.requiredHistory = 20;
+    this.requiredHistory = -1;
 
   // this SMA will choose wich RSI_BULL_BEAR will be asked for advice;
   // this is a part of this sample concept and is changeable;
@@ -63,59 +62,20 @@ method.check = function(candle) {
     // (guess its impossible)
 
     // so all child strats should tick here; 
-    //note that some strats take candle, some take price which would be candle.close here.
-    this.RBB1.tick(candle);
-    this.RBB2.tick(candle);
-
+    this.childrenCheck(candle);
 
     // now our strategy logic of selecting the consultant RBB;
     if (Selector > this.settings.selectorThreshold)
     {
-        if (this.RBB1.lastAdvice)
-            this.advice(this.RBB1.lastAdvice.recommendation);
+       this.listenAdvice(this.RBB1);
     }
     else
     {
-        if (this.RBB2.lastAdvice)
-            this.advice(this.RBB2.lastAdvice.recommendation);
+       this.listenAdvice(this.RBB2);
     }
 
 
-
-    // clear advices for each child strategy!
-    this.RBB1.lastAdvice = false;
-    this.RBB2.lastAdvice = false;
-
-	// and thats it;
 }
 
-// BELOW METHODS ARE INNER WORKINGS AND NOT INTERESTING FOR A STRATEGY DESIGNER;
-method.createChild = function(stratname, settings) {
-    //  REPRODUCE STEPS ON gekko/plugins/tradingAdvisor.js
-
-    var Consultant = require('../plugins/tradingAdvisor/baseTradingMethod');
-
-    var stratMethod = require('./'+stratname+'.js');
-
-    _.each(stratMethod, function(fn, name) {
-        Consultant.prototype[name] = fn;
-    });
-
-    Consultant.prototype.collectAdvice = function(advice)
-    {
-        this.lastAdvice = advice;
-
-    }
-    var Strategy = new Consultant(settings);
-
-    Strategy.on('advice', Strategy.collectAdvice );
-
-    return Strategy;
-}
-
-method.collectAdvice = function(advice)
-{
-    this.advices.push(advice);
-}
 
 module.exports = method;
