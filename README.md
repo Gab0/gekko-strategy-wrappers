@@ -3,11 +3,11 @@ Or to add a simple conditional to existing strat that is reusable to any other (
 
 Examples added, and community examples are welcome;
 
-###Setup
+### Setup
 
-Move `strategyWrapperRules` to gekko strategy folder.
+Move `strategyWrapperRules.js` to gekko strategy folder.
 
-###Usage
+### Usage
 
 Check the examples.
 
