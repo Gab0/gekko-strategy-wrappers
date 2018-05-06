@@ -14,6 +14,9 @@ Check the examples.
 ### Examples
 
 WRSI_BULL_BEAR: a remake of RSI_BULL_BEAR, now using the wrapper. 
-Strangely it behaves differently (unintended), trading less with higher profit.
+Unintededly it behaved different of the original, trading less with sometimes higher profit.
+Found out thats because it tracks the trend separated for each RSI instance.
+
+WRSI_BULL_BEAR depends on `RSI_COMPONENT.js`, so this file should follow `WRSI_BULL_BEAR.js` to `/strategies` folder.
 
 
