@@ -35,18 +35,11 @@ method.log = function() {
 
 }
 
-method.cloneCandle = function(candle) {
-//well, some strategies take candle as argument of method.check, some get externally
-//as method.candle SOMEHOW; this may be not necessary at all just a reminder - Gab0
-return JSON.parse(JSON.stringify(candle));
-
-}
-
 
 method.check = function(candle) {
 
     // childCheck required for each wrapper check;
-    this.childCheck();
+    this.checkChildren();
 
     this.lastVolumes.push(candle.volume);
 

@@ -40,7 +40,7 @@ method.log = function() {
 method.check = function(candle) {
 
     // this clear last advice and do a tick for each children strategy!
-    this.childCheck(candle);
+    this.checkChildren(candle);
 
     // if children strat sent advice, propogate it;
     // -> this is a dummy Wrapper;

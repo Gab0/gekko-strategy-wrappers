@@ -62,7 +62,7 @@ method.check = function(candle) {
     // (guess its impossible)
 
     // so all child strats should tick here; 
-    this.childrenCheck(candle);
+    this.checkChildren(candle);
 
     // now our strategy logic of selecting the consultant RBB;
     if (Selector > this.settings.selectorThreshold)

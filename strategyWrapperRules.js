@@ -3,7 +3,7 @@ var _ = require('lodash');
 var Wrapper = {};
 // BELOW METHODS ARE INNER WORKINGS AND NOT INTERESTING FOR A STRATEGY DESIGNER;
 Wrapper.children = [];
-
+Wrapper.requiredHistory = -1;
 Wrapper.createChild = function(stratname, settings) {
     //  REPRODUCE STEPS ON gekko/plugins/tradingAdvisor.js
 
@@ -28,7 +28,7 @@ Wrapper.createChild = function(stratname, settings) {
 
 }
 
-Wrapper.childCheck = function(candle) {
+Wrapper.checkChildren = function(candle) {
 _.each(this.children, function(child) {
     child.lastAdvice = false;
     child.tick(candle);

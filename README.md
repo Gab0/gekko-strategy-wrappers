@@ -11,4 +11,9 @@ Move `strategyWrapperRules.js` to gekko strategy folder.
 
 Check the examples.
 
+### Examples
+
+WRSI_BULL_BEAR: a remake of RSI_BULL_BEAR, now using the wrapper. 
+Strangely it behaves differently (unintended), trading less with higher profit.
+
 
