@@ -1,9 +1,12 @@
 var _ = require('lodash');
 
 var Wrapper = {};
-// BELOW METHODS ARE INNER WORKINGS AND NOT INTERESTING FOR A STRATEGY DESIGNER;
+// SETUP BASE ATTRIBUTES OF THE STRATEGY (requiredHistory best at NULL which is -1);
 Wrapper.children = [];
 Wrapper.requiredHistory = -1;
+Wrapper.age = 0;
+
+// METHOD TO CREATE CHILDREN STRATEGY WITH GEKKO STRAT BASE CLASS INCORPORATED;
 Wrapper.createChild = function(stratname, settings) {
     //  REPRODUCE STEPS ON gekko/plugins/tradingAdvisor.js
 
