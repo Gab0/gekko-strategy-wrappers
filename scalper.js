@@ -45,11 +45,11 @@ method.check = function(candle) {
 if (this.holdAge > this.delay) {
 var modPercentile = this.originalPrice * (this.thresholdPercent / 100);
 if (this.adviceOnHold == 'long') {
-	var proceedAdvice = candle.close > this.originalPrice + modPercentile;
+	var proceedAdvice = candle.close < this.originalPrice - modPercentile;
 
 }
 if (this.adviceOnHold == 'short') {
-	var proceedAdvice = candle.close < this.originalPrice - modPercentile;
+	var proceedAdvice = candle.close > this.originalPrice + modPercentile;
 }
 
 if (proceedAdvice)
