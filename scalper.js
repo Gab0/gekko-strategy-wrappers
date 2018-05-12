@@ -11,7 +11,6 @@ var Wrapper = require('./strategyWrapperRules');
 var method = Wrapper;
 method.init = function() {
 
-
     var STRATEGY = "RSI_BULL_BEAR";
     this.STRATEGY = this.createChild(STRATEGY, this.settings);
 
@@ -19,7 +18,7 @@ method.init = function() {
     this.delay = this.settings.scalperDelay; // IN CANDLES;
     this.thresholdPercent = this.settings.scalperThresholdPercent;
 
-	this.initOnHold();
+	  this.initOnHold();
 }
 
 
@@ -33,9 +32,9 @@ method.log = function() {
 }
 
 method.initOnHold = function () {
-this.adviceOnHold = false;
-this.holdAge = 0;
-this.originalPrice = 0;
+    this.adviceOnHold = false;
+    this.holdAge = 0;
+    this.originalPrice = 0;
 }
 
 method.check = function(candle) {
@@ -43,37 +42,42 @@ method.check = function(candle) {
     // childCheck required for each wrapper check;
     this.checkChildren(candle);
 
-	if (this.adviceOnHold)
-	{
-	if (this.holdAge > this.delay) {
-	this.initOnHold();
-} else {
-	var modPercentile = this.originalPrice * (this.thresholdPercent / 100);
-	if (this.adviceOnHold == 'long') {
-		var proceedAdvice = candle.close <= this.originalPrice - modPercentile;
+	  if (this.adviceOnHold)
+	  {
+	      if (this.holdAge > this.delay)
+        {
+	          this.initOnHold();
+        } else {
+	          var modPercentile = this.originalPrice * (this.thresholdPercent / 100);
+	          if (this.adviceOnHold == 'long')
+            {
+		            var proceedAdvice = candle.close <= this.originalPrice - modPercentile;
+                
+            }	
+            if (this.adviceOnHold == 'short')
+            {
+	              var proceedAdvice = candle.close >= this.originalPrice + modPercentile;
+            }
 
-}	
-if (this.adviceOnHold == 'short') {
-	var proceedAdvice = candle.close >= this.originalPrice + modPercentile;
-}
+        if (proceedAdvice)
+            {
+	              this.advice(this.adviceOnHold);
+	              this.initOnHold();
+            } else
+            {
+                this.holdAge++;
+            }
 
-if (proceedAdvice)
-{
-	this.advice(this.adviceOnHold);
-	this.initOnHold();
-}
-}
-}else this.holdAge++;
-
+        }
+    }
 
 
 
-if (this.STRATEGY.lastAdvice){
-	this.adviceOnHold = this.STRATEGY.lastAdvice.recommendation;
-	this.originalPrice = candle.close;
-}
- 
-
+    if (this.STRATEGY.lastAdvice)
+    {
+	      this.adviceOnHold = this.STRATEGY.lastAdvice.recommendation;
+	      this.originalPrice = candle.close;
+    }
 
 	// and thats it;
 }
