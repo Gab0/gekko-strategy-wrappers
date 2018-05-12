@@ -19,6 +19,7 @@ method.init = function() {
     this.delay = this.settings.scalperDelay; // IN CANDLES;
     this.thresholdPercent = this.settings.scalperThresholdPercent;
 
+	this.initOnHold();
 }
 
 
@@ -35,30 +36,36 @@ method.initOnHold = function () {
 this.adviceOnHold = false;
 this.holdAge = 0;
 this.originalPrice = 0;
+}
+
 method.check = function(candle) {
 
     // childCheck required for each wrapper check;
-    this.checkChildren();
+    this.checkChildren(candle);
 
 	if (this.adviceOnHold)
-{
-if (this.holdAge > this.delay) {
-var modPercentile = this.originalPrice * (this.thresholdPercent / 100);
-if (this.adviceOnHold == 'long') {
-	var proceedAdvice = candle.close < this.originalPrice - modPercentile;
+	{
+	if (this.holdAge > this.delay) {
+	this.initOnHold();
+} else {
+	var modPercentile = this.originalPrice * (this.thresholdPercent / 100);
+	if (this.adviceOnHold == 'long') {
+		var proceedAdvice = candle.close <= this.originalPrice - modPercentile;
 
-}
+}	
 if (this.adviceOnHold == 'short') {
-	var proceedAdvice = candle.close > this.originalPrice + modPercentile;
+	var proceedAdvice = candle.close >= this.originalPrice + modPercentile;
 }
 
 if (proceedAdvice)
-	this.advice(adviceOnHold);
-this.initOnHold();
+{
+	this.advice(this.adviceOnHold);
+	this.initOnHold();
+}
 }
 }else this.holdAge++;
 
-}
+
 
 
 if (this.STRATEGY.lastAdvice){
